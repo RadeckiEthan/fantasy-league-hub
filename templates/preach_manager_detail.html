@@ -105,7 +105,9 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title text-muted">Championships</h5>
                                 <h2 class="display-4 text-warning">{{ career_summary.total_championships }}🏆</h2>
-                                <span class="text-muted" style="font-size: 0.9rem;">All-Time Glory</span>
+                                {% if career_summary.champ_years %}
+                                <span class="text-muted" style="font-size: 0.9rem;">{{ career_summary.champ_years }}</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

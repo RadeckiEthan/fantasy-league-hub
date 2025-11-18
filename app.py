@@ -37,7 +37,7 @@ def preach_leaderboard():
     leaderboard_data = []
     
     for manager in df['Manager'].unique():
-        manager_data = df[df['Manager'] == manager]
+        manager_data = df[df['Manager'] == manager].copy()
         
         total_wins = int(manager_data['W'].sum())
         total_losses = int(manager_data['L'].sum())
@@ -110,6 +110,10 @@ def preach_manager_detail(manager_name):
     total_championships = int(manager_data['Champ_W'].sum())
     career_pfg = manager_data['PF/G'].mean()
     
+    # Get championship years
+    champ_years = manager_data[manager_data['Champ_W'] == 1]['Year'].tolist()
+    champ_years_str = ', '.join(str(int(year)) for year in champ_years) if champ_years else ''
+    
     # Calculate ranks across all managers for career stats (excluding William Serafin and Thomas Sullivan)
     all_managers = df[~df['Manager'].isin(['William Serafin', 'Thomas Sullivan'])].groupby('Manager').agg({
         'W': 'sum',
@@ -139,6 +143,7 @@ def preach_manager_detail(manager_name):
             'total_playoffs': total_playoffs,
             'total_championships': total_championships,
             'career_pfg': career_pfg,
+            'champ_years': champ_years_str,
             'show_ranks': False
         }
     else:
@@ -152,6 +157,7 @@ def preach_manager_detail(manager_name):
             'total_playoffs': total_playoffs,
             'total_championships': total_championships,
             'career_pfg': career_pfg,
+            'champ_years': champ_years_str,
             'wins_rank': int(manager_ranks['Wins_Rank']),
             'losses_rank': int(manager_ranks['Losses_Rank']),
             'win_pct_rank': int(manager_ranks['Win_Pct_Rank']),
@@ -248,15 +254,7 @@ def preach_manager_detail(manager_name):
             overlaying='y',
             side='right'
         ),
-        legend=dict(
-            x=1.0, 
-            y=1.0,
-            xanchor='right',
-            yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.9)',
-            bordercolor='black',
-            borderwidth=1
-        ),
+        showlegend=False,
         barmode='overlay'
     )
     combined_chart_html = pio.to_html(combined_chart, full_html=False, include_plotlyjs='cdn')
