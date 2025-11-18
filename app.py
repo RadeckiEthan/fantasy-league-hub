@@ -12,13 +12,13 @@ def home():
 
 @app.route('/preach')
 def preach():
-    # Season start date (Week 1)
-    season_start = datetime(2025, 9, 4)  # September 4th, 2025
+    # Season start date (Week 1) - Tuesdays
+    season_start = datetime(2025, 9, 2)  # September 2nd, 2025 (Tuesday)
     today = datetime.now()
     
     # Create list of weeks with calculated dates
     weeks = []
-    for week_num in [11]:  # Only Week 11 for now
+    for week_num in [11, 12]:  # Added Week 12
         week_date = season_start + timedelta(weeks=week_num - 1)
         days_ago = (today - week_date).days
         
@@ -47,6 +47,10 @@ def preach():
     weeks.reverse()
     
     return render_template('preach_hub.html', weeks=weeks)
+
+@app.route('/preach/week12')
+def preach_week12():
+    return render_template('preach_week12.html')
 
 @app.route('/preach/week11')
 def preach_week11():
