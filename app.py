@@ -135,6 +135,11 @@ def preach_manager_detail(manager_name):
             # Yellow to Red
             r = 255
             g = int((1 - normalized) * 2 * 255)
+        
+        # Clamp values to valid RGB range (0-255)
+        r = max(0, min(255, r))
+        g = max(0, min(255, g))
+        
         return f'rgb({r}, {g}, 0)'
     
     # Calculate career summary stats
