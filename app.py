@@ -352,12 +352,71 @@ def preach_manager_detail(manager_name):
     
     luck_chart_html = pio.to_html(luck_chart, full_html=False, include_plotlyjs='cdn')
     
+    # Create Dominance Chart (Dominance_Score)
+    # Function to get color based on z-score (positive = green/dominant, negative = red/weak)
+    def get_dominance_color(zscore):
+        if zscore >= 0:
+            # Positive z-score (dominant - high PF/G) - scale to green
+            # Cap at z-score of 2 for color scaling
+            normalized = min(zscore / 2, 1)
+            r = int((1 - normalized) * 255)
+            g = 255
+            b = int((1 - normalized) * 255)
+        else:
+            # Negative z-score (weak - low PF/G) - scale to red
+            # Cap at z-score of -2 for color scaling
+            normalized = min(abs(zscore) / 2, 1)
+            r = 255
+            g = int((1 - normalized) * 255)
+            b = int((1 - normalized) * 255)
+        return f'rgb({r}, {g}, {b})'
+    
+    dominance_colors = [get_dominance_color(z) for z in chart_data['Dominance_Score']]
+    
+    dominance_chart = go.Figure()
+    
+    # Add z-score bars
+    dominance_chart.add_trace(go.Bar(
+        x=chart_data['Year'],
+        y=chart_data['Dominance_Score'],
+        name='Dominance Score',
+        marker=dict(
+            color=dominance_colors,
+            line=dict(color='black', width=1)
+        ),
+        hovertemplate='Year: %{x}<br>Dominance Score: %{y:.2f}<extra></extra>'
+    ))
+    
+    # Add zero line (league average)
+    dominance_chart.add_hline(
+        y=0, 
+        line_dash="dash", 
+        line_color="black", 
+        line_width=2,
+        annotation_text="League Average (0)",
+        annotation_position="right"
+    )
+    
+    dominance_chart.update_layout(
+        title='Season Dominance Score (Based on PF/G Z-Score)',
+        xaxis_title='Year',
+        yaxis_title='Dominance Score (Z-Score)',
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        font=dict(size=14),
+        hovermode='x unified',
+        showlegend=False
+    )
+    
+    dominance_chart_html = pio.to_html(dominance_chart, full_html=False, include_plotlyjs='cdn')
+    
     return render_template('preach_manager_detail.html', 
                          manager_name=manager_name, 
                          seasons=seasons,
                          career_summary=career_summary,
                          combined_chart=combined_chart_html,
-                         luck_chart=luck_chart_html)
+                         luck_chart=luck_chart_html,
+                         dominance_chart=dominance_chart_html)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
