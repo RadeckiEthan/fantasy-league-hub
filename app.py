@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.io as pio
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -11,7 +12,41 @@ def home():
 
 @app.route('/preach')
 def preach():
-    return render_template('preach_hub.html')
+    # Season start date (Week 1)
+    season_start = datetime(2025, 9, 4)  # September 4th, 2025
+    today = datetime.now()
+    
+    # Create list of weeks with calculated dates
+    weeks = []
+    for week_num in [11]:  # Only Week 11 for now
+        week_date = season_start + timedelta(weeks=week_num - 1)
+        days_ago = (today - week_date).days
+        
+        # Format the "time ago" string
+        if days_ago == 0:
+            time_ago = "today"
+        elif days_ago == 1:
+            time_ago = "1 day ago"
+        elif days_ago < 7:
+            time_ago = f"{days_ago} days ago"
+        elif days_ago < 14:
+            time_ago = "1 week ago"
+        elif days_ago < 30:
+            time_ago = f"{days_ago // 7} weeks ago"
+        elif days_ago < 60:
+            time_ago = "1 month ago"
+        else:
+            time_ago = f"{days_ago // 30} months ago"
+        
+        weeks.append({
+            'number': week_num,
+            'time_ago': time_ago
+        })
+    
+    # Reverse so newest is first
+    weeks.reverse()
+    
+    return render_template('preach_hub.html', weeks=weeks)
 
 @app.route('/preach/week11')
 def preach_week11():

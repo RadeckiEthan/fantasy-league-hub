@@ -47,83 +47,17 @@
                 <h2 class="mb-4">Weekly Previews</h2>
                 
                 <div class="list-group">
-                    <a href="/preach/week11" class="list-group-item list-group-item-action">
+                    {% for week in weeks %}
+                    <a href="/preach/week{{ week.number }}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 11 Preview</h4>
+                            <h4 class="mb-1">Week {{ week.number }} Preview</h4>
+                            {% if loop.first %}
                             <span class="badge rounded-pill" style="background-color: #9c949c; font-size: 0.9rem;">Latest</span>
+                            {% endif %}
                         </div>
-                        <p class="mb-1">Published 2 days ago</p>
+                        <p class="mb-1">Published {{ week.time_ago }}</p>
                     </a>
-                    
-                    <a href="/preach/week10" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 10 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 1 week ago</p>
-                    </a>
-                    
-                    <a href="/preach/week9" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 9 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 2 weeks ago</p>
-                    </a>
-                    
-                    <a href="/preach/week8" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 8 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 3 weeks ago</p>
-                    </a>
-                    
-                    <a href="/preach/week7" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 7 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 1 month ago</p>
-                    </a>
-                    
-                    <a href="/preach/week6" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 6 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 1 month ago</p>
-                    </a>
-                    
-                    <a href="/preach/week5" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 5 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 1 month ago</p>
-                    </a>
-                    
-                    <a href="/preach/week4" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 4 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 2 months ago</p>
-                    </a>
-                    
-                    <a href="/preach/week3" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 3 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 2 months ago</p>
-                    </a>
-                    
-                    <a href="/preach/week2" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 2 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 2 months ago</p>
-                    </a>
-                    
-                    <a href="/preach/week1" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between align-items-center">
-                            <h4 class="mb-1">Week 1 Preview</h4>
-                        </div>
-                        <p class="mb-1">Published 3 months ago</p>
-                    </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
