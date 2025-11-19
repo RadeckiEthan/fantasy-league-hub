@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Analysis - Preach Fantasy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background-color: #f8f9fa;">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #9c949c;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏈 Preach Fantasy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/preach">Preach Fantasy</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/preach/draft-analysis">Draft Analysis</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="display-4" style="color: #9c949c;">📊 Draft Slot Analysis</h1>
+                <p class="lead">Analyzing draft position success and controlling for manager quality</p>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Insight Box -->
+    <div class="container mt-4">
+        <div class="alert alert-info">
+            <h5><strong>What is Manager-Adjusted Performance?</strong></h5>
+            <p><strong>Dominance Score:</strong> A measure of how much better or worse your team scored compared to the league average each week. Positive scores mean you consistently outscored opponents, negative means you underperformed.</p>
+            <p class="mb-0"><strong>Manager-Adjusted Performance:</strong> I calculate each manager's career average Dominance Score, then compare how they actually performed from each draft slot versus what we'd expect based on their career average. A positive "overperformance" means that draft slot tends to produce better results than expected.</p>
+        </div>
+    </div>
+
+    <!-- Summary Charts -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Playoff Rate by Draft Slot</h5>
+                        <canvas id="playoffChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manager-Adjusted Performance</h5>
+                        <canvas id="adjustedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Stats Table -->
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Draft Slot Performance Breakdown</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead style="background-color: #9c949c; color: white;">
+                            <tr>
+                                <th>Draft Slot</th>
+                                <th>Seasons</th>
+                                <th>Playoff %</th>
+                                <th>Championship %</th>
+                                <th>Avg PF/G</th>
+                                <th>Avg Dominance</th>
+                                <th>Expected Dominance</th>
+                                <th>Over/Under Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in draft_stats %}
+                            <tr>
+                                <td><strong>{{ stat.slot }}</strong></td>
+                                <td>{{ stat.seasons }}</td>
+                                
+                                <!-- Playoff % with color -->
+                                <td style="background-color: 
+                                    {% if stat.playoff_rate >= 70 %}#d4edda
+                                    {% elif stat.playoff_rate >= 50 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.playoff_rate }}%
+                                </td>
+                                
+                                <!-- Championship % with color -->
+                                <td style="background-color: 
+                                    {% if stat.champ_rate >= 15 %}#d4edda
+                                    {% elif stat.champ_rate >= 1 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.champ_rate }}%
+                                </td>
+                                
+                                <!-- Avg PF/G with color -->
+                                <td style="background-color: 
+                                    {% if stat.avg_pfg >= 112 %}#d4edda
+                                    {% elif stat.avg_pfg >= 108 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.avg_pfg }}
+                                </td>
+                                
+                                <!-- Avg Dominance with color -->
+                                <td style="background-color: 
+                                    {% if stat.avg_dominance > 0.2 %}#d4edda
+                                    {% elif stat.avg_dominance > -0.2 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    color: {% if stat.avg_dominance > 0 %}green{% else %}red{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.avg_dominance }}
+                                </td>
+                                
+                                <!-- Expected Dominance with color -->
+                                <td style="background-color: 
+                                    {% if stat.expected_dominance > 0.2 %}#d4edda
+                                    {% elif stat.expected_dominance > -0.2 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    color: {% if stat.expected_dominance > 0 %}green{% else %}red{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.expected_dominance }}
+                                </td>
+                                
+                                <!-- Over/Under Performance with color -->
+                                <td style="background-color: 
+                                    {% if stat.overperformance > 0.2 %}#d4edda
+                                    {% elif stat.overperformance > -0.2 %}#fff3cd
+                                    {% else %}#f8d7da{% endif %}; 
+                                    color: {% if stat.overperformance > 0 %}green{% else %}red{% endif %}; 
+                                    font-weight: bold;">
+                                    {{ stat.overperformance }}
+                                    {% if stat.overperformance > 0 %}▲{% else %}▼{% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager Distribution by Draft Slot -->
+    <div class="container mt-4 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Who Picked From Each Slot?</h3>
+                <div class="row">
+                    {% for stat in draft_stats %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card h-100" style="border: 2px solid #9c949c;">
+                            <div class="card-header" style="background-color: #9c949c; color: white;">
+                                <strong>Slot {{ stat.slot }}</strong>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled mb-0">
+                                    {% for manager, count in stat.manager_counts.items() %}
+                                    <li>{{ manager }}: {{ count }}x</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager Quality Rankings -->
+    <div class="container mt-4 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Manager Quality (Career Avg Dominance Score)</h3>
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <table class="table table-striped">
+                            <thead style="background-color: #9c949c; color: white;">
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Manager</th>
+                                    <th>Career Avg Dominance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for manager, score in manager_quality %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td><strong>{{ manager }}</strong></td>
+                                    <td style="color: {% if score > 0 %}green{% else %}red{% endif %};">{{ score }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="container mb-5">
+        <div class="text-center">
+            <a href="/preach" class="btn btn-lg" style="background-color: #9c949c; color: white;">← Back to Preach Fantasy Hub</a>
+        </div>
+    </div>
+
+    <script>
+        // Playoff Rate Chart
+        const playoffCtx = document.getElementById('playoffChart').getContext('2d');
+        new Chart(playoffCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for stat in draft_stats %}{{ stat.slot }},{% endfor %}],
+                datasets: [{
+                    label: 'Playoff Rate (%)',
+                    data: [{% for stat in draft_stats %}{{ stat.playoff_rate }},{% endfor %}],
+                    backgroundColor: 'rgba(156, 148, 156, 0.7)',
+                    borderColor: 'rgba(156, 148, 156, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Playoff Rate (%)' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Draft Slot' }
+                    }
+                }
+            }
+        });
+
+        // Manager-Adjusted Performance Chart
+        const adjustedCtx = document.getElementById('adjustedChart').getContext('2d');
+        new Chart(adjustedCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for stat in draft_stats %}{{ stat.slot }},{% endfor %}],
+                datasets: [{
+                    label: 'Over/Under Performance',
+                    data: [{% for stat in draft_stats %}{{ stat.overperformance }},{% endfor %}],
+                    backgroundColor: [
+                        {% for stat in draft_stats %}
+                        '{% if stat.overperformance > 0 %}rgba(40, 167, 69, 0.7){% else %}rgba(220, 53, 69, 0.7){% endif %}',
+                        {% endfor %}
+                    ],
+                    borderColor: [
+                        {% for stat in draft_stats %}
+                        '{% if stat.overperformance > 0 %}rgba(40, 167, 69, 1){% else %}rgba(220, 53, 69, 1){% endif %}',
+                        {% endfor %}
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        title: { display: true, text: 'Dominance Score Difference' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Draft Slot' }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

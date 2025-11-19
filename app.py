@@ -116,6 +116,66 @@ def preach_leaderboard():
     
     return render_template('preach_leaderboard.html', leaderboard=leaderboard)
 
+@app.route('/preach/draft-analysis')
+def preach_draft_analysis():
+    import pandas as pd
+    import numpy as np
+    
+    # Load data
+    df = pd.read_csv('static/data/preach_manager_stats.csv', encoding='latin-1')
+    
+    # Exclude 15-team season (Draft_Slot 15)
+    df = df[df['Draft_Slot'] <= 14].copy()
+    
+    # Calculate manager career averages (for adjustment)
+    manager_avg = df.groupby('Manager')['Dominance_Score'].mean().to_dict()
+    df['Manager_Quality'] = df['Manager'].map(manager_avg)
+    
+    # Draft slot analysis
+    draft_stats = []
+    for slot in range(1, 15):
+        slot_data = df[df['Draft_Slot'] == slot]
+        
+        if len(slot_data) == 0:
+            continue
+            
+        # Raw performance metrics
+        playoff_rate = slot_data['Playoffs'].mean() * 100
+        champ_rate = slot_data['Champ_W'].mean() * 100
+        avg_pfg = slot_data['PF/G'].mean()
+        avg_dominance = slot_data['Dominance_Score'].mean()
+        
+        # Manager-adjusted performance
+        expected_dominance = slot_data['Manager_Quality'].mean()
+        actual_dominance = avg_dominance
+        overperformance = actual_dominance - expected_dominance
+        
+        # Manager distribution
+        manager_counts = slot_data['Manager'].value_counts().to_dict()
+        
+        draft_stats.append({
+            'slot': slot,
+            'seasons': len(slot_data),
+            'playoff_rate': round(playoff_rate, 1),
+            'champ_rate': round(champ_rate, 1),
+            'avg_pfg': round(avg_pfg, 2),
+            'avg_dominance': round(avg_dominance, 2),
+            'expected_dominance': round(expected_dominance, 2),
+            'overperformance': round(overperformance, 2),
+            'manager_counts': manager_counts
+        })
+    
+    # Manager quality rankings
+    manager_quality = sorted(
+        [(mgr, round(score, 2)) for mgr, score in manager_avg.items()],
+        key=lambda x: x[1],
+        reverse=True
+    )
+    
+    return render_template('preach_draft_analysis.html', 
+                         draft_stats=draft_stats,
+                         manager_quality=manager_quality)
+
 @app.route('/preach/managers/<manager_name>')
 def preach_manager_detail(manager_name):
     # Read the CSV with different encoding
