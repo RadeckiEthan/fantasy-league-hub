@@ -226,15 +226,48 @@
     <script>
         // Playoff Rate Chart
         const playoffCtx = document.getElementById('playoffChart').getContext('2d');
+
+        // Function to get color based on playoff rate (25% = red, 55% = yellow, 85% = green)
+        function getPlayoffColor(rate) {
+            let red, green;
+            
+            if (rate <= 25) {
+                // Pure red for 25% and below
+                red = 255;
+                green = 0;
+            } else if (rate <= 55) {
+                // Red to Yellow (25% to 55%)
+                const progress = (rate - 25) / (55 - 25);
+                red = 255;
+                green = Math.round(progress * 255);
+            } else if (rate <= 85) {
+                // Yellow to Green (55% to 85%)
+                const progress = (rate - 55) / (85 - 55);
+                red = Math.round((1 - progress) * 255);
+                green = 255;
+            } else {
+                // Pure green for 85% and above
+                red = 0;
+                green = 255;
+            }
+            
+            return `rgba(${red}, ${green}, 0, 0.7)`;
+        }
+
+        // Get playoff rates and generate colors
+        const playoffRates = [{% for stat in draft_stats %}{{ stat.playoff_rate }},{% endfor %}];
+        const playoffColors = playoffRates.map(rate => getPlayoffColor(rate));
+        const playoffBorderColors = playoffRates.map(rate => getPlayoffColor(rate).replace('0.7', '1'));
+
         new Chart(playoffCtx, {
             type: 'bar',
             data: {
                 labels: [{% for stat in draft_stats %}{{ stat.slot }},{% endfor %}],
                 datasets: [{
                     label: 'Playoff Rate (%)',
-                    data: [{% for stat in draft_stats %}{{ stat.playoff_rate }},{% endfor %}],
-                    backgroundColor: 'rgba(156, 148, 156, 0.7)',
-                    borderColor: 'rgba(156, 148, 156, 1)',
+                    data: playoffRates,
+                    backgroundColor: playoffColors,
+                    borderColor: playoffBorderColors,
                     borderWidth: 1
                 }]
             },
