@@ -479,13 +479,69 @@ def preach_manager_detail(manager_name):
     
     dominance_chart_html = pio.to_html(dominance_chart, full_html=False, include_plotlyjs='cdn')
     
+    # Calculate best and worst matchups from matchup_data.csv
+    # Calculate best and worst matchups from matchup_data.csv
+    try:
+        matchup_df = pd.read_csv('static/data/matchup_data.csv', encoding='latin-1')
+        
+        # Filter for this manager and include regular season + playoff games
+        manager_matchups = matchup_df[
+            (matchup_df['Team_Name'] == manager_name) &
+            ((matchup_df['Week'].str.contains(r'^Week \d+', na=False, regex=True)) | 
+             ((matchup_df['Week'].str.contains(r'^Playoff Round', na=False, regex=True)) & 
+              (matchup_df['Is_Playoff'] == 'Yes')))
+        ].copy()
+        
+        if len(manager_matchups) == 0:
+            raise ValueError("No matchups found")
+        
+        # Calculate head-to-head records
+        h2h = manager_matchups.groupby('Opponent_Name').agg({
+            'Outcome': lambda x: [(x == 'Win').sum(), (x == 'Loss').sum(), len(x)]
+        }).reset_index()
+        
+        h2h['Wins'] = h2h['Outcome'].apply(lambda x: x[0])
+        h2h['Losses'] = h2h['Outcome'].apply(lambda x: x[1])
+        h2h['Games'] = h2h['Outcome'].apply(lambda x: x[2])
+        h2h['Win_Pct'] = h2h['Wins'] / h2h['Games']
+        
+        # Exclude William Serafin and Thomas Sullivan
+        h2h = h2h[~h2h['Opponent_Name'].isin(['William Serafin', 'Thomas Sullivan'])]
+        
+        if len(h2h) == 0:
+            raise ValueError("No valid opponents found")
+        
+        # Get best matchup (highest win %)
+        best_matchup = h2h.loc[h2h['Win_Pct'].idxmax()]
+        worst_matchup = h2h.loc[h2h['Win_Pct'].idxmin()]
+        
+        matchup_stats = {
+            'best_opponent': best_matchup['Opponent_Name'],
+            'best_record': f"{int(best_matchup['Wins'])}-{int(best_matchup['Losses'])}",
+            'best_win_pct': f"({round(best_matchup['Win_Pct'] * 100, 1)}%)",
+            'worst_opponent': worst_matchup['Opponent_Name'],
+            'worst_record': f"{int(worst_matchup['Wins'])}-{int(worst_matchup['Losses'])}",
+            'worst_win_pct': f"({round(worst_matchup['Win_Pct'] * 100, 1)}%)"
+        }
+    except Exception as e:
+        print(f"Error loading matchup data: {e}")
+        matchup_stats = {
+            'best_opponent': 'N/A',
+            'best_record': 'N/A',
+            'best_win_pct': '',
+            'worst_opponent': 'N/A',
+            'worst_record': 'N/A',
+            'worst_win_pct': ''
+        }
+    
     return render_template('preach_manager_detail.html', 
                          manager_name=manager_name, 
                          seasons=seasons,
                          career_summary=career_summary,
                          combined_chart=combined_chart_html,
                          luck_chart=luck_chart_html,
-                         dominance_chart=dominance_chart_html)
+                         dominance_chart=dominance_chart_html,
+                         matchup_stats=matchup_stats)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
