@@ -159,6 +159,19 @@
                 </div>
             </div>
         </div>
+        <!-- ADD THIS NEW SECTION HERE -->
+        {% if luck_matrix %}
+        <div class="row">
+            <div class="col-lg-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ luck_matrix|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- END OF NEW SECTION -->
     </div>
 
     <!-- New Matchup Analysis Charts -->

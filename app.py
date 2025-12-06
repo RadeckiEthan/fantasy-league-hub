@@ -3,8 +3,16 @@ import pandas as pd
 import plotly.graph_objs as go
 import plotly.io as pio
 from datetime import datetime, timedelta
+import os
+import subprocess
 
 app = Flask(__name__)
+
+try:
+    subprocess.run(['python', 'generate_manager_visualizations.py'], check=True)
+    print("Manager visualizations generated successfully!")
+except subprocess.CalledProcessError as e:
+    print(f"Error generating visualizations: {e}")
 
 @app.route('/')
 def home():
@@ -18,7 +26,7 @@ def preach():
     
     # Create list of weeks with calculated dates
     weeks = []
-    for week_num in [11, 12]:  # Added Week 12
+    for week_num in [11, 12, 14]:  # Added Week 14
         week_date = season_start + timedelta(weeks=week_num - 1)
         days_ago = (today - week_date).days
         
@@ -47,6 +55,10 @@ def preach():
     weeks.reverse()
     
     return render_template('preach_hub.html', weeks=weeks)
+
+@app.route('/preach/week14')
+def preach_week14():
+    return render_template('preach_week14.html')
 
 @app.route('/preach/week12')
 def preach_week12():
@@ -175,6 +187,115 @@ def preach_draft_analysis():
     return render_template('preach_draft_analysis.html', 
                          draft_stats=draft_stats,
                          manager_quality=manager_quality)
+
+def create_luck_matrix(manager_name):
+    """Create a matrix showing actual vs predicted record against median"""
+    import plotly.graph_objs as go
+    
+    try:
+        # Load matchup data
+        matchup_df = pd.read_csv('static/data/matchup_data.csv', encoding='latin-1')
+        
+        # Filter for this manager (regular season only)
+        manager_matchups = matchup_df[
+            (matchup_df['Team_Name'] == manager_name) &
+            (matchup_df['Week'].str.contains(r'^Week \d+', na=False, regex=True))
+        ].copy()
+        
+        if len(manager_matchups) == 0:
+            return None
+        
+        # Calculate league median for each week/season
+        medians = matchup_df[
+            matchup_df['Week'].str.contains(r'^Week \d+', na=False, regex=True)
+        ].groupby(['Season_Year', 'Week'])['Team_Score'].median().reset_index()
+        medians.columns = ['Season_Year', 'Week', 'League_Median']
+        
+        # Merge median with manager data
+        manager_matchups = manager_matchups.merge(medians, on=['Season_Year', 'Week'], how='left')
+        
+        # Calculate predicted outcome vs median
+        manager_matchups['Predicted_Win'] = (manager_matchups['Team_Score'] > manager_matchups['League_Median']).astype(int)
+        manager_matchups['Actual_Win'] = (manager_matchups['Outcome'] == 'Win').astype(int)
+        
+        # Create matrix data by season
+        seasons = sorted(manager_matchups['Season_Year'].unique())
+        matrix_data = []
+        
+        for season in seasons:
+            season_data = manager_matchups[manager_matchups['Season_Year'] == season]
+            
+            # Count outcomes
+            actual_wins = season_data['Actual_Win'].sum()
+            actual_losses = len(season_data) - actual_wins
+            predicted_wins = season_data['Predicted_Win'].sum()
+            predicted_losses = len(season_data) - predicted_wins
+            
+            # Calculate luck (actual - predicted)
+            luck = actual_wins - predicted_wins
+            
+            matrix_data.append({
+                'Season': int(season),
+                'Actual_Wins': int(actual_wins),
+                'Actual_Losses': int(actual_losses),
+                'Predicted_Wins': int(predicted_wins),
+                'Predicted_Losses': int(predicted_losses),
+                'Luck': int(luck),
+                'Actual_Record': f"{int(actual_wins)}-{int(actual_losses)}",
+                'Predicted_Record': f"{int(predicted_wins)}-{int(predicted_losses)}"
+            })
+        
+        matrix_df = pd.DataFrame(matrix_data)
+        
+        # Create the visualization as a simple table
+        fig = go.Figure()
+        
+        # Add table trace
+        fig.add_trace(go.Table(
+            header=dict(
+                values=['Season', 'Actual Record', 'Predicted Record', 'Luck Score'],
+                fill_color='#6c5a6c',
+                font=dict(color='white', size=16),
+                align='center',
+                height=40
+            ),
+            cells=dict(
+                values=[
+                    matrix_df['Season'],
+                    matrix_df['Actual_Record'],
+                    matrix_df['Predicted_Record'],
+                    matrix_df['Luck'].apply(lambda x: f"{'+' if x > 0 else ''}{x}")
+                ],
+                fill_color=[
+                    ['white'] * len(matrix_df),
+                    ['white'] * len(matrix_df),
+                    ['white'] * len(matrix_df),
+                    [f'rgba(0, 255, 0, {min(abs(x)/5, 0.5)})' if x > 0 else 
+                     f'rgba(255, 0, 0, {min(abs(x)/5, 0.5)})' if x < 0 else 'white' 
+                     for x in matrix_df['Luck']]
+                ],
+                font=dict(size=15),
+                align='center',
+                height=40
+            )
+        ))
+        
+        fig.update_layout(
+            title={
+                'text': 'Schedule Luck Analysis: Actual vs Predicted Record<br><sub>Predicted record based on performance vs league median score each week</sub>',
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': dict(size=18)
+            },
+            height=max(400, len(matrix_df) * 60 + 200),
+            margin=dict(l=20, r=20, t=100, b=20)
+        )
+        
+        return pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
+    
+    except Exception as e:
+        print(f"Error creating luck matrix: {e}")
+        return None
 
 @app.route('/preach/managers/<manager_name>')
 def preach_manager_detail(manager_name):
@@ -479,7 +600,9 @@ def preach_manager_detail(manager_name):
     
     dominance_chart_html = pio.to_html(dominance_chart, full_html=False, include_plotlyjs='cdn')
     
-    # Calculate best and worst matchups from matchup_data.csv
+    # Create luck matrix
+    luck_matrix_html = create_luck_matrix(manager_name)
+    
     # Calculate best and worst matchups from matchup_data.csv
     try:
         matchup_df = pd.read_csv('static/data/matchup_data.csv', encoding='latin-1')
@@ -541,6 +664,7 @@ def preach_manager_detail(manager_name):
                          combined_chart=combined_chart_html,
                          luck_chart=luck_chart_html,
                          dominance_chart=dominance_chart_html,
+                         luck_matrix=luck_matrix_html,
                          matchup_stats=matchup_stats)
 
 if __name__ == '__main__':
