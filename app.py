@@ -666,6 +666,14 @@ def preach_manager_detail(manager_name):
                          dominance_chart=dominance_chart_html,
                          luck_matrix=luck_matrix_html,
                          matchup_stats=matchup_stats)
+                        
+@app.route('/preach/playoffs/round1')
+def preach_playoffs_round1():
+    return render_template('preach_playoffs_round1.html')
+
+@app.route('/preach/historical-comparisons')
+def preach_historical_comparisons():
+    return render_template('preach_historical_comparisons.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

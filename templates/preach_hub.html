@@ -24,7 +24,7 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Hero Section -->
     <div class="container-fluid py-5" style="background-color: #9c949c; background-image: url('{{ url_for('static', filename='images/preach_logo.png') }}'); background-size: contain; background-repeat: no-repeat; background-position: center;">
         <div class="container">
@@ -33,29 +33,56 @@
                     <h1 class="display-3">🏈 Preach Fantasy</h1>
                     <p class="lead">Weekly rankings, trades, and storylines from the league</p>
                     <div class="mt-3">
-                        <a href="/preach/managers" class="btn btn-lg me-2" style="background-color: #9c949c; color: white;">View Manager Bios</a>
-                        <a href="/preach/leaderboard" class="btn btn-lg me-2" style="background-color: #6c5a6c; color: white;">🏆 All-Time Leaderboard</a>
-                        <a href="/preach/draft-analysis" class="btn btn-lg" style="background-color: #8a93ab; color: white;">📊 Draft Analysis</a>
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-3">
+                                <a href="/preach/managers" class="btn btn-lg w-100" style="background-color: #9c949c; color: white;">View Manager Bios</a>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <a href="/preach/leaderboard" class="btn btn-lg w-100" style="background-color: #6c5a6c; color: white;">🏆 All-Time Leaderboard</a>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <a href="/preach/draft-analysis" class="btn btn-lg w-100" style="background-color: #8a93ab; color: white;">📊 Draft Analysis</a>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <a href="/preach/historical-comparisons" class="btn btn-lg w-100" style="background-color: #6c5a6c; color: white;">📈 Historical Comparisons</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
+    <!-- Playoff Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4">🏆 2025 Playoffs</h2>
+                
+                <div class="list-group mb-4">
+                    <a href="/preach/playoffs/round1" class="list-group-item list-group-item-action" style="border-left: 5px solid #6c5a6c;">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <h4 class="mb-1">Round 1 - Quarterfinals</h4>
+                            <span class="badge rounded-pill" style="background-color: #9c949c; font-size: 0.9rem;">Latest</span>
+                        </div>
+                        <p class="mb-1">Matchup predictions and bracket breakdown</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Weekly Previews List -->
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="mb-4">Weekly Previews</h2>
+                <h2 class="mb-4">Regular Season Previews</h2>
                 
                 <div class="list-group">
                     {% for week in weeks %}
                     <a href="/preach/week{{ week.number }}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between align-items-center">
                             <h4 class="mb-1">Week {{ week.number }} Preview</h4>
-                            {% if loop.first %}
-                            <span class="badge rounded-pill" style="background-color: #9c949c; font-size: 0.9rem;">Latest</span>
-                            {% endif %}
                         </div>
                         <p class="mb-1">Published {{ week.time_ago }}</p>
                     </a>
@@ -64,7 +91,7 @@
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
