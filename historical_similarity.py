@@ -30,8 +30,28 @@ class HistoricalSimilarityAnalysis:
         Determine which playoff round a team was eliminated
         Returns the round number where they lost, or None if they won championship
         """
+        # Special handling for 2020 - had 14 teams (4 rounds)
+        if season == 2020:
+            # 2020 structure: R1=Round of 14, R2=Quarters, R3=Semis, R4=Finals
+            playoff_rounds_2020 = [
+                ('Playoff Round 1', 1),  # Round of 14
+                ('Playoff Round 2', 2),  # Quarterfinals
+                ('Playoff Round 3', 3),  # Semifinals
+                ('Playoff Round 4', 4)   # Finals
+            ]
+            
+            for round_name, normalized_round in playoff_rounds_2020:
+                round_game = self.matchup_data[
+                    (self.matchup_data['Team_Name'] == manager) &
+                    (self.matchup_data['Season_Year'] == season) &
+                    (self.matchup_data['Week'] == round_name) &
+                    (self.matchup_data['Is_Playoff'] == 'Yes') &
+                    (self.matchup_data['Outcome'] == 'Loss')
+                ]
+                if len(round_game) > 0:
+                    return normalized_round
         # Special handling for 2021 - had an extra wildcard round
-        if season == 2021:
+        elif season == 2021:
             # 2021 structure: R1=Wildcard, R2=Quarters, R3=Semis, R4=Finals
             playoff_rounds_2021 = [
                 ('Playoff Round 1', 1),  # Wildcard
@@ -51,7 +71,7 @@ class HistoricalSimilarityAnalysis:
                 if len(round_game) > 0:
                     return normalized_round
         else:
-            # Normal playoff structure
+            # Normal playoff structure (2022-2024)
             playoff_rounds = ['Playoff Round 1', 'Playoff Round 2', 'Playoff Round 3']
             for i, round_name in enumerate(playoff_rounds, start=1):
                 round_game = self.matchup_data[
@@ -364,7 +384,14 @@ class HistoricalSimilarityAnalysis:
                     # Show elimination round
                     if pd.notna(similar_team['Elimination_Round']):
                         elim_round = int(similar_team['Elimination_Round'])
-                        round_names = {1: 'Round 1', 2: 'Semifinals', 3: 'Finals'}
+                        year = int(similar_team['Year'])
+                        
+                        # Different naming for 2020 (14 teams)
+                        if year == 2020:
+                            round_names = {1: 'Round of 14', 2: 'Quarterfinals', 3: 'Semifinals', 4: 'Finals'}
+                        else:
+                            round_names = {1: 'Round 1', 2: 'Semifinals', 3: 'Finals'}
+                        
                         round_name = round_names.get(elim_round, f'Round {elim_round}')
                         print(f"      Eliminated in: {round_name}")
                     
@@ -480,7 +507,14 @@ class HistoricalSimilarityAnalysis:
                     
                     if has_elim_round:
                         elim_round = int(sim_team['Elimination_Round'])
-                        round_names = {1: 'Quarterfinals', 2: 'Semifinals', 3: 'Finals'}
+                        year = int(sim_team['Year'])
+                        
+                        # Different naming for 2020 (14 teams)
+                        if year == 2020:
+                            round_names = {1: 'Round of 14', 2: 'Quarterfinals', 3: 'Semifinals', 4: 'Finals'}
+                        else:
+                            round_names = {1: 'Quarterfinals', 2: 'Semifinals', 3: 'Finals'}
+                        
                         round_name = round_names.get(elim_round, f'R{elim_round}')
                         
                         # Show score if it was Round 1
