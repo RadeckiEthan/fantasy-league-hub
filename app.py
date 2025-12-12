@@ -56,6 +56,12 @@ def preach():
     
     return render_template('preach_hub.html', weeks=weeks)
 
+@app.route('/preach/champions')
+def preach_champions():
+    """Display all Preach Fantasy champions"""
+    years = [2024, 2023, 2022, 2021, 2020]
+    return render_template('champions.html', years=years)
+
 @app.route('/preach/week14')
 def preach_week14():
     return render_template('preach_week14.html')
@@ -674,6 +680,26 @@ def preach_playoffs_round1():
 @app.route('/preach/historical-comparisons')
 def preach_historical_comparisons():
     return render_template('preach_historical_comparisons.html')
+
+@app.route('/dynasty')
+def dynasty_hub():
+    """Dynasty Fantasy hub page"""
+    return render_template('dynasty_hub.html')
+
+@app.route('/dynasty/playoffs/round1')
+def dynasty_round1():
+    """Round 1 playoffs for Dynasty Fantasy"""
+    return render_template('dynasty_round1.html')
+
+@app.route('/basketball')
+def basketball_hub():
+    """Fantasy Basketball hub page"""
+    return render_template('basketball_hub.html')
+
+@app.route('/basketball/december')
+def basketball_december():
+    """December rankings for Fantasy Basketball"""
+    return render_template('december_rankings.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

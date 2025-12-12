@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preach Fantasy - Round 1 Playoff Predictions</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/preach_logo.png') }}">
+    <title>Dynasty Fantasy - Round 1 Playoffs</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/dynasty_logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="background-color: #9c949c;">
+<body style="background-color: #a3adc2;">
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #6c5a6c;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #8a93ab;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">🏈 Preach Fantasy</a>
+            <a class="navbar-brand" href="/">🏈 Dynasty Fantasy</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -21,7 +21,7 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/preach">Preach Fantasy</a>
+                        <a class="nav-link" href="/dynasty">Dynasty Fantasy</a>
                     </li>
                 </ul>
             </div>
@@ -32,8 +32,8 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h1 class="display-3" style="color: white;">Round 1 Playoff Predictions</h1>
-                <p class="lead" style="color: white;">Preach Fantasy League - Quarterfinals</p>
+                <h1 class="display-3" style="color: white;">Round 1 - Quarterfinals</h1>
+                <p class="lead" style="color: white;">Dynasty Fantasy Playoffs</p>
                 <hr style="border-color: white; border-width: 3px;">
             </div>
         </div>
@@ -43,10 +43,10 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="mb-4" style="color: white;">📰 Playoff Preview</h2>
-                <img src="{{ url_for('static', filename='images/preach/round1/playoff_preview.png') }}" 
+                <h2 class="mb-4" style="color: white;">📰 Top Stories</h2>
+                <img src="{{ url_for('static', filename='images/dynasty/round1/dynasty_round1_stories.png') }}" 
                      class="img-fluid rounded shadow" 
-                     alt="Playoff Preview">
+                     alt="Round 1 Top Stories">
             </div>
         </div>
     </div>
@@ -56,49 +56,33 @@
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="mb-4" style="color: white;">🏆 Current Bracket</h2>
-                <img src="{{ url_for('static', filename='images/preach/round1/current_bracket.png') }}" 
+                <img src="{{ url_for('static', filename='images/dynasty/round1/dynasty_round1_current_bracket.png') }}" 
                      class="img-fluid rounded shadow" 
                      alt="Current Bracket">
             </div>
         </div>
     </div>
 
-    <!-- Matchup Predictions Section -->
+    <!-- Matchup Previews Section -->
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="mb-4" style="color: white;">⚔️ Matchup Previews</h2>
                 
-                <!-- Matchup 1: 1 vs 8 -->
+                <!-- 4v5 Matchup -->
                 <div class="mb-4">
-                    <h4 style="color: white;">#1 Seed vs #8 Seed</h4>
-                    <img src="{{ url_for('static', filename='images/preach/round1/matchup_1v8.png') }}" 
+                    <h3 class="mb-3" style="color: white;">4 seed vs 5 seed</h3>
+                    <img src="{{ url_for('static', filename='images/dynasty/round1/dynasty_round1_4v5.png') }}" 
                          class="img-fluid rounded shadow" 
-                         alt="Matchup 1: 1 vs 8">
+                         alt="4 vs 5 Matchup">
                 </div>
                 
-                <!-- Matchup 2: 4 vs 5 -->
+                <!-- 3v6 Matchup -->
                 <div class="mb-4">
-                    <h4 style="color: white;">#4 Seed vs #5 Seed</h4>
-                    <img src="{{ url_for('static', filename='images/preach/round1/matchup_4v5.png') }}" 
+                    <h3 class="mb-3" style="color: white;">3 seed vs 6 seed</h3>
+                    <img src="{{ url_for('static', filename='images/dynasty/round1/dynasty_round1_3v6.png') }}" 
                          class="img-fluid rounded shadow" 
-                         alt="Matchup 2: 4 vs 5">
-                </div>
-                
-                <!-- Matchup 3: 2 vs 7 -->
-                <div class="mb-4">
-                    <h4 style="color: white;">#2 Seed vs #7 Seed</h4>
-                    <img src="{{ url_for('static', filename='images/preach/round1/matchup_2v7.png') }}" 
-                         class="img-fluid rounded shadow" 
-                         alt="Matchup 3: 2 vs 7">
-                </div>
-                
-                <!-- Matchup 4: 3 vs 6 -->
-                <div class="mb-4">
-                    <h4 style="color: white;">#3 Seed vs #6 Seed</h4>
-                    <img src="{{ url_for('static', filename='images/preach/round1/matchup_3v6.png') }}" 
-                         class="img-fluid rounded shadow" 
-                         alt="Matchup 4: 3 vs 6">
+                         alt="3 vs 6 Matchup">
                 </div>
             </div>
         </div>
@@ -109,7 +93,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="mb-4" style="color: white;">🔮 Predicted Bracket</h2>
-                <img src="{{ url_for('static', filename='images/preach/round1/predicted_bracket.png') }}" 
+                <img src="{{ url_for('static', filename='images/dynasty/round1/dynasty_round1_predicted_bracket.png') }}" 
                      class="img-fluid rounded shadow" 
                      alt="Predicted Bracket">
             </div>
@@ -120,7 +104,7 @@
     <div class="container mb-5">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <a href="/preach" class="btn btn-lg" style="background-color: #9c949c; color: white;">← Back to Preach Fantasy Hub</a>
+                <a href="/dynasty" class="btn btn-lg" style="background-color: #8a93ab; color: white;">← Back to Dynasty Fantasy Hub</a>
             </div>
         </div>
     </div>

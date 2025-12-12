@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Basketball Hub</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/basketball_logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #bea077;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏀 Fantasy Basketball</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <div class="container-fluid py-5" style="background-color: #bea077; background-image: url('{{ url_for('static', filename='images/basketball_logo.png') }}'); background-size: contain; background-repeat: no-repeat; background-position: center;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center" style="background-color: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 10px;">
+                    <h1 class="display-3">🏀 Fantasy Basketball</h1>
+                    <p class="lead">Monthly rankings and storylines from the league</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Monthly Rankings List -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4">Monthly Rankings</h2>
+                
+                <div class="list-group">
+                    <a href="/basketball/december" class="list-group-item list-group-item-action" style="border-left: 5px solid #bea077;">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <h4 class="mb-1">December Rankings</h4>
+                            <span class="badge rounded-pill" style="background-color: #bea077; font-size: 0.9rem;">Latest</span>
+                        </div>
+                        <p class="mb-1">Power rankings and top stories</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

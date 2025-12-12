@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Basketball - December Rankings</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/basketball_logo.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: #d4b896;">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #bea077;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏀 Fantasy Basketball</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/basketball">Fantasy Basketball</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="display-3" style="color: white;">December Rankings</h1>
+                <p class="lead" style="color: white;">Fantasy Basketball League</p>
+                <hr style="border-color: white; border-width: 3px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Stories Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4" style="color: white;">📰 Top Stories</h2>
+                <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_stories.png') }}" 
+                     class="img-fluid rounded shadow" 
+                     alt="December Top Stories">
+            </div>
+        </div>
+    </div>
+
+    <!-- Power Rankings Section -->
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4" style="color: white;">📊 Power Rankings</h2>
+                
+                <!-- Rank 14 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_14.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 14">
+                </div>
+                
+                <!-- Rank 13 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_13.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 13">
+                </div>
+                
+                <!-- Rank 12 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_12.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 12">
+                </div>
+                
+                <!-- Rank 11 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_11.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 11">
+                </div>
+                
+                <!-- Rank 10 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_10.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 10">
+                </div>
+                
+                <!-- Rank 9 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_9.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 9">
+                </div>
+                
+                <!-- Rank 8 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_8.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 8">
+                </div>
+                
+                <!-- Rank 7 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_7.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 7">
+                </div>
+                
+                <!-- Rank 6 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_6.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 6">
+                </div>
+                
+                <!-- Rank 5 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_5.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 5">
+                </div>
+                
+                <!-- Rank 4 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_4.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 4">
+                </div>
+                
+                <!-- Rank 3 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_3.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 3">
+                </div>
+                
+                <!-- Rank 2 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_2.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 2">
+                </div>
+                
+                <!-- Rank 1 -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/basketball/december/bball_dec_1.png') }}" 
+                         class="img-fluid rounded shadow" 
+                         alt="Rank 1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Hub Button -->
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <a href="/basketball" class="btn btn-lg" style="background-color: #bea077; color: white;">← Back to Fantasy Basketball Hub</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
