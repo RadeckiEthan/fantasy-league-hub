@@ -59,7 +59,7 @@ def preach():
 @app.route('/preach/champions')
 def preach_champions():
     """Display all Preach Fantasy champions"""
-    years = [2024, 2023, 2022, 2021, 2020]
+    years = [2025, 2024, 2023, 2022, 2021, 2020]
     return render_template('champions.html', years=years)
 
 @app.route('/preach/week14')

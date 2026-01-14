@@ -55,6 +55,21 @@
                          class="img-fluid rounded shadow" 
                          alt="{{ year }} Champion">
                 </div>
+                
+                <!-- Trophy Presentation Photo (between 2025 and 2024) -->
+                {% if year == 2025 %}
+                <div class="mb-5">
+                    <div class="text-center mb-3">
+                        <h3 style="color: white;">📸 Passing of the Trophy</h3>
+                    </div>
+                    <div class="text-center">
+                        <img src="{{ url_for('static', filename='images/preach/champions/champion_photo_2025.jpeg') }}" 
+                             class="img-fluid rounded shadow" 
+                             alt="2024 Champion passes trophy to 2025 Champion"
+                             style="max-width: 70%;">
+                    </div>
+                </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
